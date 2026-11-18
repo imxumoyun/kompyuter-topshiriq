@@ -132,7 +132,7 @@ textarea{width:100%;min-height:110px;font:inherit;font-size:13px;color:var(--tex
   <div class="box task">
     <div><svg class="i"><use href="#link"/></svg><span>Barcha qismlar <b>bir-biriga mos</b> bo'lsin: socket, RAM turi, o'lcham va quvvat.</span></div>
     <div><svg class="i"><use href="#shop"/></svg><span>Narxni <b>so'mda</b>, faqat raqam bilan yozing. Narx dollarda bo'lsa, so'mga o'girib yozing (kursni <a href="https://cbu.uz" target="_blank" rel="noopener" style="color:var(--acc)">cbu.uz</a> dan oling). Havolani mahsulot sahifasidan nusxa olib qo'ying.</span></div>
-    <div><svg class="i"><use href="#send"/></svg><span>Tugatgach, pastdagi <b>«Yuborish»</b> tugmasini bosing — natija to'g'ridan-to'g'ri o'qituvchiga boradi.</span></div>
+    <div><svg class="i"><use href="#send"/></svg><span>Tugatgach, pastdagi <b>«Yuborish»</b> tugmasini bosing — natija to'g'ridan-to'g'ri Xumoyun akaga boradi.</span></div>
     <div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);margin-top:6px">Qayerdan qidirish mumkin (majburiy emas)</div>
     <div style="font-size:13px;color:var(--mute)">O'zbekiston do'konlari</div>
     <div class="shops"><a href="https://upg.uz" target="_blank" rel="noopener">upg.uz</a><a href="https://texnomart.uz" target="_blank" rel="noopener">texnomart.uz</a><a href="https://mediapark.uz" target="_blank" rel="noopener">mediapark.uz</a><a href="https://asaxiy.uz" target="_blank" rel="noopener">asaxiy.uz</a><a href="https://www.olx.uz" target="_blank" rel="noopener">olx.uz</a></div>
@@ -299,7 +299,7 @@ async function sendToBot(btn){
     const r=await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,{method:"POST",body:fd});
     const j=await r.json();
     if(!j.ok) throw new Error(j.description||"xato");
-    btn.innerHTML="✓ O'qituvchiga yuborildi";btn.style.background="var(--ok)";btn.style.color="#06210f";
+    btn.innerHTML="✓ Xumoyun akaga yuborildi";btn.style.background="var(--ok)";btn.style.color="#06210f";
     try{localStorage.setItem("pcTaskSent",new Date().toLocaleString("ru-RU"))}catch(e){}
     const h=document.getElementById("sentInfo");if(h){h.style.display="block"}
     toast("Yuborildi ✓");
@@ -336,7 +336,7 @@ $("sendBtn").onclick=()=>{
   const tg="https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(text);
   openSheet(`
     <h2>Natijani yuborish</h2>
-    <p class="m">Tekshirib oling, so'ng «O'qituvchiga yuborish»ni bosing — natija to'g'ridan-to'g'ri o'qituvchiga boradi.</p>
+    <p class="m">Tekshirib oling, so'ng «Xumoyun akaga yuborish»ni bosing — natija to'g'ridan-to'g'ri Xumoyun akaga boradi.</p>
     ${miss.length?`<div class="miss"><b>To'ldirilmagan (${miss.length}):</b><br>${miss.map(esc).join("<br>")}</div>`:""}
     <div class="res">
       <div class="hd"><b>${esc(who.name.trim()||"Ism kiritilmagan")}</b>${who.grp.trim()?" · "+esc(who.grp.trim()):""}</div>
@@ -344,8 +344,8 @@ $("sendBtn").onclick=()=>{
       <div class="ft"><span>Umumiy narx</span><span>${fmt(total)} so'm</span></div>
     </div>
     <div class="acts">
-      <button class="btn tg" id="botBtn" style="padding:17px;font-size:16px"><svg class="i"><use href="#send"/></svg>O'qituvchiga yuborish</button>
-      <div id="sentInfo" class="miss" style="display:none;background:var(--card);border-color:var(--ok)"><b style="color:var(--ok)">Yuborildi!</b> Natijangiz o'qituvchiga yetib bordi. Xato topsangiz — tuzatib, qayta yuborishingiz mumkin.</div>
+      <button class="btn tg" id="botBtn" style="padding:17px;font-size:16px"><svg class="i"><use href="#send"/></svg>Xumoyun akaga yuborish</button>
+      <div id="sentInfo" class="miss" style="display:none;background:var(--card);border-color:var(--ok)"><b style="color:var(--ok)">Yuborildi!</b> Natijangiz Xumoyun akaga yetib bordi. Xato topsangiz — tuzatib, qayta yuborishingiz mumkin.</div>
       <div id="sendErr" class="miss" style="display:none"><b>Yuborilmadi.</b> Internetni tekshirib, qayta bosing.</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
         <button class="linkbtn" id="dlBtn">CSV faylni yuklab olish</button>
