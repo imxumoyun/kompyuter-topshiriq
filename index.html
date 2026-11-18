@@ -83,6 +83,7 @@ input::placeholder{color:#5e6c88}
 .res .ft{display:flex;justify-content:space-between;padding:12px 14px;font-weight:800;font-size:16px;color:var(--warm)}
 .acts{display:grid;gap:9px}
 .note{font-size:12.5px;color:var(--mute);text-align:center;margin-top:10px;line-height:1.4}
+.linkbtn{background:none;border:none;color:var(--mute);font:inherit;font-size:14px;font-weight:600;text-decoration:underline;cursor:pointer;padding:8px 2px}
 .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:var(--ok);color:#06210f;font-weight:800;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:30;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .saved{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--ok);margin-top:2px}
@@ -343,27 +344,17 @@ $("sendBtn").onclick=()=>{
       <div class="ft"><span>Umumiy narx</span><span>${fmt(total)} so'm</span></div>
     </div>
     <div class="acts">
-      <button class="btn tg" id="botBtn"><svg class="i"><use href="#send"/></svg>O'qituvchiga yuborish</button>
-      <div id="sentInfo" class="miss" style="display:none;background:var(--card);border-color:var(--ok)"><b style="color:var(--ok)">Yuborildi!</b> Natijangiz (CSV fayl) o'qituvchiga yetib bordi. Xato topsangiz — tuzatib, qayta yuborishingiz mumkin.</div>
-      <div id="sendErr" class="miss" style="display:none"><b>Yuborilmadi.</b> Internetni tekshirib, qayta bosing. Bo'lmasa — pastdagi usullardan foydalaning.</div>
-      <div class="note" style="margin:6px 0 2px">Boshqa usullar:</div>
-      <button class="btn g" id="shareBtn"><svg class="i"><use href="#send"/></svg>Fayl qilib ulashish</button>
-      <div id="dlHelp" class="miss" style="display:none;background:var(--card);border-color:var(--ok)"><b style="color:var(--ok)">Fayl yuklab olindi.</b> Telegramda o'qituvchi chatini oching → 📎 → <b>Fayl</b> → «Yuklanmalar» (Downloads) dan <b>${esc(fileName())}</b> ni tanlang.</div>
-      <button class="btn g" id="dlBtn"><svg class="i"><use href="#copy"/></svg>CSV faylni yuklab olish</button>
-      <a class="btn g" href="${tg}" target="_blank" rel="noopener"><svg class="i"><use href="#send"/></svg>Matn qilib yuborish</a>
-      <button class="btn g" id="copyBtn"><svg class="i"><use href="#copy"/></svg>CSV matnini nusxalash</button>
-      <button class="btn g" id="closeBtn">Ortga qaytish</button>
-    </div>
-    <div class="miss" style="background:var(--card);border-color:var(--line);margin:12px 0 0"><b style="color:var(--acc)">Yuboriladigan CSV:</b><pre style="white-space:pre-wrap;word-break:break-all;font-size:11.5px;color:var(--mute);margin-top:6px;max-height:160px;overflow:auto">${esc(text)}</pre></div>
-    <p class="note">Agar «O'qituvchiga yuborish» ishlamasa —: «CSV matnini nusxalash»ni bosing va o'qituvchiga xabar qilib yuboring.</p>`);
-  $("copyBtn").onclick=()=>{
-    const done=()=>toast("Nusxa olindi ✓");
-    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done,()=>fallbackCopy(text,done));
-    else fallbackCopy(text,done);
-  };
+      <button class="btn tg" id="botBtn" style="padding:17px;font-size:16px"><svg class="i"><use href="#send"/></svg>O'qituvchiga yuborish</button>
+      <div id="sentInfo" class="miss" style="display:none;background:var(--card);border-color:var(--ok)"><b style="color:var(--ok)">Yuborildi!</b> Natijangiz o'qituvchiga yetib bordi. Xato topsangiz — tuzatib, qayta yuborishingiz mumkin.</div>
+      <div id="sendErr" class="miss" style="display:none"><b>Yuborilmadi.</b> Internetni tekshirib, qayta bosing.</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <button class="linkbtn" id="dlBtn">CSV faylni yuklab olish</button>
+        <button class="linkbtn" id="closeBtn">Ortga</button>
+      </div>
+      <div id="dlHelp" class="note" style="display:none">Fayl telefoningizning «Yuklanmalar» (Downloads) papkasiga saqlandi.</div>
+    </div>`);
   $("closeBtn").onclick=closeSheet;
   $("dlBtn").onclick=downloadCsv;
-  $("shareBtn").onclick=shareCsv;
   $("botBtn").onclick=e=>sendToBot(e.currentTarget);
 };
 function fallbackCopy(t,cb){
