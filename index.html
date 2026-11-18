@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topshiriq: o'z kompyuteringizni yig'ing</title>
+<style>
+:root{--bg:#0a1020;--bg2:#111a30;--card:#141f38;--line:#24314f;--text:#f1f5fb;--mute:#93a2bf;--acc:#22d3ee;--acc2:rgba(34,211,238,.14);--warm:#ffa630;--warm2:rgba(255,166,48,.14);--bad:#f87171;--ok:#34d399}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(700px 400px at 100% -5%,var(--acc2),transparent 70%),radial-gradient(600px 400px at 0% 100%,var(--warm2),transparent 70%),var(--bg);background-attachment:fixed;color:var(--text);font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+svg.i{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:720px;margin:0 auto;padding:22px 16px 130px}
+.kicker{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--acc)}
+h1{font-size:28px;line-height:1.15;font-weight:800;margin:6px 0 10px;letter-spacing:-.3px}
+h1 span{color:var(--warm)}
+.lead{color:var(--mute);font-size:15px;line-height:1.5}
+.box{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:16px}
+.task{margin:16px 0;display:flex;flex-direction:column;gap:9px}
+.task div{display:flex;gap:10px;font-size:14.5px;line-height:1.4}
+.task svg{width:20px;height:20px;flex:none;color:var(--acc);margin-top:1px}
+.shops{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.shops a{font-size:13px;font-weight:700;color:var(--acc);text-decoration:none;padding:6px 11px;border-radius:999px;background:var(--acc2)}
+label.f{display:block;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+input{width:100%;font:inherit;font-size:16px;color:var(--text);background:var(--bg2);border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;transition:border-color .15s}
+input:focus{border-color:var(--acc)}
+input::placeholder{color:#5e6c88}
+.who{display:grid;grid-template-columns:1.6fr 1fr;gap:10px}
+.prog{display:flex;align-items:center;gap:12px;margin:22px 2px 12px}
+.prog b{font-size:15px;white-space:nowrap}
+.pbar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--warm));transition:width .3s}
+.group{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--warm);margin:22px 4px 10px}
+.items{display:flex;flex-direction:column;gap:12px}
+.item{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px;transition:border-color .2s}
+.item.done{border-color:color-mix(in srgb,var(--ok) 55%,transparent)}
+.ih{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.ic{width:42px;height:42px;border-radius:12px;background:var(--acc2);color:var(--acc);display:grid;place-items:center;flex:none}
+.ic svg{width:24px;height:24px}
+.ih .t{flex:1;min-width:0}
+.ih b{display:block;font-size:17px}
+.ih small{display:block;font-size:12.5px;color:var(--mute);line-height:1.3;margin-top:1px}
+.st{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;flex:none;color:transparent}
+.done .st{background:var(--ok);border-color:var(--ok);color:#06210f}
+.st svg{width:15px;height:15px;stroke-width:3}
+.del{background:none;border:none;color:var(--mute);padding:4px;cursor:pointer}
+.del svg{width:20px;height:20px}
+.fields{display:grid;gap:9px}
+.row2{display:grid;grid-template-columns:1fr;gap:9px}
+.pr{position:relative}
+.pr input{padding-right:58px;font-weight:700}
+.pr span{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--mute);font-size:14px;font-weight:700;pointer-events:none}
+.lk{display:flex;gap:8px}
+.lk a{flex:none;width:48px;border-radius:12px;display:grid;place-items:center;background:var(--bg2);border:1.5px solid var(--line);color:var(--mute);pointer-events:none;opacity:.5}
+.lk a.on{color:var(--acc);border-color:var(--acc);pointer-events:auto;opacity:1}
+.lk a svg{width:20px;height:20px}
+.add{width:100%;margin-top:12px;padding:14px;border-radius:16px;border:1.5px dashed var(--line);background:transparent;color:var(--acc);font:inherit;font-weight:700;font-size:15px;cursor:pointer}
+.clear{display:block;margin:26px auto 0;background:none;border:none;color:var(--mute);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+/* bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(10,16,32,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+.bar .in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.tot{flex:1;min-width:0}
+.tot small{display:block;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute)}
+.tot b{display:block;font-size:23px;font-weight:800;color:var(--warm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{border:none;border-radius:14px;padding:14px 18px;font:inherit;font-weight:800;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn svg{width:20px;height:20px}
+.btn.p{background:var(--acc);color:#04202a}
+.btn.g{background:var(--bg2);color:var(--text);border:1.5px solid var(--line)}
+.btn.tg{background:#2aabee;color:#fff}
+/* modal */
+.modal{position:fixed;inset:0;z-index:20;background:rgba(3,6,15,.75);display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{background:var(--bg2);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));border:1px solid var(--line)}
+.sheet h2{font-size:21px;margin-bottom:6px}
+.sheet p.m{color:var(--mute);font-size:14px;margin-bottom:14px;line-height:1.45}
+.miss{background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.45);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:14px;line-height:1.5}
+.miss b{color:var(--bad)}
+.res{background:var(--card);border:1.5px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:14px}
+.res .hd{padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.res .hd b{font-size:16px}
+.res .r{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.res .r span{color:var(--mute);font-size:12.5px;grid-column:1}
+.res .r em{font-style:normal;font-weight:700;grid-row:1/3;grid-column:2;align-self:center;white-space:nowrap}
+.res .ft{display:flex;justify-content:space-between;padding:12px 14px;font-weight:800;font-size:16px;color:var(--warm)}
+.acts{display:grid;gap:9px}
+.note{font-size:12.5px;color:var(--mute);text-align:center;margin-top:10px;line-height:1.4}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:var(--ok);color:#06210f;font-weight:800;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:30;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.saved{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--ok);margin-top:2px}
+.saved.no{color:var(--bad)}
+.saved svg{width:13px;height:13px;stroke-width:3}
+.warn{display:none;margin:14px 0 0;background:rgba(248,113,113,.1);border:1.5px solid rgba(248,113,113,.45);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45}
+.warn.on{display:block}
+.warn b{color:var(--bad)}
+.tip{margin-top:14px;font-size:13.5px;line-height:1.5;color:var(--mute)}
+.tip b{color:var(--text)}
+.bk{display:flex;gap:8px;margin-top:12px}
+.bk .btn{flex:1;padding:12px 10px;font-size:14px}
+textarea{width:100%;min-height:110px;font:inherit;font-size:13px;color:var(--text);background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px;outline:none;margin-bottom:10px;resize:vertical}
+@media(min-width:620px){.row2{grid-template-columns:1.3fr 1fr}h1{font-size:34px}.modal{align-items:center}.sheet{border-radius:22px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+ <symbol id="cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx=".5"/><path d="M9 2v4M12 2v4M15 2v4M9 18v4M12 18v4M15 18v4M2 9h4M2 12h4M2 15h4M18 9h4M18 12h4M18 15h4"/></symbol>
+ <symbol id="mobo" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="6" y="6" width="5" height="5" rx=".5"/><path d="M14 6v6M16.5 6v6M6 15h12M6 18h8"/></symbol>
+ <symbol id="ram" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="9" rx="1"/><path d="M5 10h2v3H5zM9 10h2v3H9zM13 10h2v3h-2zM17 10h2v3h-2zM4 16v2M7 16v2M10 16v2M14.5 16v2M17.5 16v2M20 16v2"/></symbol>
+ <symbol id="gpu" viewBox="0 0 24 24"><rect x="2" y="6" width="18" height="11" rx="1.5"/><circle cx="7.5" cy="11.5" r="3"/><circle cx="14.5" cy="11.5" r="3"/><path d="M20 9h2v5h-2M5 17v2.5M9 17v2.5M13 17v2.5"/></symbol>
+ <symbol id="ssd" viewBox="0 0 24 24"><rect x="2" y="8" width="18" height="8" rx="1"/><path d="M5 11h7M5 13.5h4M20 10.5h2v3h-2"/><circle cx="16.5" cy="12" r="1"/></symbol>
+ <symbol id="psu" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="9" cy="12" r="4.5"/><path d="M9 7.5v9M4.5 12h9M17 8.5h2M17 11h2M18.5 13.5l-1 2h2l-1 2"/></symbol>
+ <symbol id="case" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="5.5" r="1"/><path d="M9 9.5h6M9 12.5h6M9 15.5h6"/></symbol>
+ <symbol id="cooler" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="1.8"/><path d="M12 10.2c0-3 1-5.2 3.5-6.2M13.8 12c3 0 5.2 1 6.2 3.5M12 13.8c0 3-1 5.2-3.5 6.2M10.2 12c-3 0-5.2-1-6.2-3.5"/></symbol>
+ <symbol id="mon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+ <symbol id="kb" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+ <symbol id="mouse" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></symbol>
+ <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="ok" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol>
+ <symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+ <symbol id="ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+ <symbol id="send" viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 4 3z"/><path d="M9 13l8-6"/></symbol>
+ <symbol id="copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+ <symbol id="link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+ <symbol id="coin" viewBox="0 0 24 24"><ellipse cx="12" cy="7" rx="8" ry="3"/><path d="M4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7M4 12v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/></symbol>
+ <symbol id="shop" viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></symbol>
+</svg>
+
+<div class="wrap">
+  <div class="kicker">Uyga vazifa · Kompyuter savodxonligi</div>
+  <h1>O'z kompyuteringizni <span>yig'ing</span></h1>
+  <p class="lead">Har bir qurilma uchun istalgan do'kon yoki saytdan haqiqiy modelni toping, narxini va havolasini yozing. Umumiy narx avtomatik hisoblanadi.</p>
+
+  <div class="box task">
+    <div><svg class="i"><use href="#link"/></svg><span>Barcha qismlar <b>bir-biriga mos</b> bo'lsin: socket, RAM turi, o'lcham va quvvat.</span></div>
+    <div><svg class="i"><use href="#shop"/></svg><span>Narxni <b>so'mda</b>, faqat raqam bilan yozing. Narx dollarda bo'lsa, so'mga o'girib yozing (kursni <a href="https://cbu.uz" target="_blank" rel="noopener" style="color:var(--acc)">cbu.uz</a> dan oling). Havolani mahsulot sahifasidan nusxa olib qo'ying.</span></div>
+    <div><svg class="i"><use href="#send"/></svg><span>Tugatgach, pastdagi <b>«Yuborish»</b> tugmasi orqali natijani o'qituvchiga Telegramda yuboring.</span></div>
+    <div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);margin-top:6px">Qayerdan qidirish mumkin (majburiy emas)</div>
+    <div style="font-size:13px;color:var(--mute)">O'zbekiston do'konlari</div>
+    <div class="shops"><a href="https://upg.uz" target="_blank" rel="noopener">upg.uz</a><a href="https://texnomart.uz" target="_blank" rel="noopener">texnomart.uz</a><a href="https://mediapark.uz" target="_blank" rel="noopener">mediapark.uz</a><a href="https://asaxiy.uz" target="_blank" rel="noopener">asaxiy.uz</a><a href="https://www.olx.uz" target="_blank" rel="noopener">olx.uz</a></div>
+    <div style="font-size:13px;color:var(--mute)">Xalqaro do'konlar</div>
+    <div class="shops"><a href="https://www.amazon.com" target="_blank" rel="noopener">amazon.com</a><a href="https://www.newegg.com" target="_blank" rel="noopener">newegg.com</a><a href="https://www.aliexpress.com" target="_blank" rel="noopener">aliexpress.com</a></div>
+    <div style="font-size:13px;color:var(--mute)">Moslikni tekshirish va narx solishtirish</div>
+    <div class="shops"><a href="https://pcpartpicker.com" target="_blank" rel="noopener">pcpartpicker.com</a></div>
+  </div>
+
+  <div class="warn" id="warn"><b>Diqqat!</b> Bu brauzer ma'lumotni saqlay olmayapti — sahifa yopilsa, yozganlaringiz o'chadi. Havolani <b>Chrome</b> yoki <b>Safari</b>da oching (Telegram ichida emas, «Brauzerda ochish» orqali).</div>
+
+  <div class="who">
+    <div><label class="f" for="name">Ism-familiya</label><input id="name" placeholder="Masalan: Aziz Karimov" autocomplete="name"></div>
+    <div><label class="f" for="grp">Guruh</label><input id="grp" placeholder="KS-3"></div>
+  </div>
+
+  <div class="prog"><b id="pcount">0 / 0</b><div class="pbar"><i id="pbar"></i></div></div>
+
+  <div id="list"></div>
+  <button class="add" id="addBtn"><svg class="i" style="width:18px;height:18px;vertical-align:-3px"><use href="#plus"/></svg> Boshqa qurilma qo'shish</button>
+  <div class="box" style="margin-top:22px">
+    <b style="font-size:15px">🛟 Zaxira nusxa</b>
+    <p class="tip">Yozganlaringiz shu telefonda <b>avtomatik saqlanadi</b>. Telefon almashsa yoki brauzer tozalansa, zaxira kodi yordam beradi: «Zaxira olish» kodini Telegramdagi <b>«Saqlangan xabarlar»</b>ga yuborib qo'ying, kerak bo'lsa «Tiklash» orqali qaytaring.</p>
+    <div class="bk"><button class="btn g" id="bkBtn">Zaxira olish</button><button class="btn g" id="rsBtn">Tiklash</button></div>
+  </div>
+  <button class="clear" id="clearBtn">Hammasini tozalash</button>
+</div>
+
+<div class="bar"><div class="in">
+  <div class="tot"><small>Umumiy narx</small><b id="total">0 so'm</b><div class="saved" id="saved"><svg class="i"><use href="#ok"/></svg><span>Avtomatik saqlanadi</span></div></div>
+  <button class="btn p" id="sendBtn"><svg class="i"><use href="#send"/></svg>Yuborish</button>
+</div></div>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT=[
+ {g:"Tizim bloki ichida",k:"cpu",n:"Protsessor",h:"CPU · socketiga e'tibor bering (AM5, LGA1700…)"},
+ {g:"Tizim bloki ichida",k:"mobo",n:"Ona plata",h:"Socket protsessor bilan bir xil, RAM turi mos"},
+ {g:"Tizim bloki ichida",k:"ram",n:"Operativ xotira (RAM)",h:"DDR4 yoki DDR5 — plataga mos bo'lsin"},
+ {g:"Tizim bloki ichida",k:"gpu",n:"Videokarta",h:"Uzunligi korpusga sig'sin"},
+ {g:"Tizim bloki ichida",k:"ssd",n:"SSD",h:"NVMe M.2 tavsiya etiladi, kamida 500 GB"},
+ {g:"Tizim bloki ichida",k:"psu",n:"Blok pitaniya",h:"(CPU + GPU + 75 Vt) × 1.3"},
+ {g:"Tizim bloki ichida",k:"case",n:"Korpus",h:"Plata o'lchamini sig'dirsin (ATX, Micro-ATX…)"},
+ {g:"Tizim bloki ichida",k:"cooler",n:"Sovutgich",h:"Protsessor socketini qo'llasin"},
+ {g:"Tashqi qurilmalar",k:"mon",n:"Monitor",h:"Diagonal, Hz, o'lcham"},
+ {g:"Tashqi qurilmalar",k:"kb",n:"Klaviatura",h:"Simli yoki simsiz"},
+ {g:"Tashqi qurilmalar",k:"mouse",n:"Sichqoncha",h:"Simli yoki simsiz"}
+];
+let items=[], who={name:"",grp:""};
+const $=id=>document.getElementById(id);
+const digits=s=>(s||"").replace(/\D/g,"");
+const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const isUrl=s=>/^https?:\/\/\S+\.\S+/i.test((s||"").trim());
+const esc=s=>(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const filled=it=>it.model.trim()&&+digits(it.price)>0&&isUrl(it.link);
+
+let canStore=false;
+try{localStorage.setItem("__t","1");canStore=localStorage.getItem("__t")==="1";localStorage.removeItem("__t")}catch(e){}
+function save(){
+  let ok=false;
+  try{localStorage.setItem("pcTask",JSON.stringify({items,who}));ok=true}catch(e){}
+  const el=$("saved");
+  if(ok){const d=new Date();el.className="saved";el.querySelector("span").textContent="Saqlandi "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+  else{el.className="saved no";el.querySelector("span").textContent="Saqlanmayapti!";$("warn").classList.add("on")}
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")save()});
+addEventListener("pagehide",save);
+addEventListener("beforeunload",save);
+const enc=o=>"PC1:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+const dec=s=>JSON.parse(decodeURIComponent(escape(atob(s.trim().replace(/^PC1:/,"").replace(/\s/g,"")))));
+function load(){
+  try{const d=JSON.parse(localStorage.getItem("pcTask")||"null");if(d&&Array.isArray(d.items)){items=d.items;who=d.who||who;return}}catch(e){}
+  items=DEFAULT.map(d=>({...d,model:"",price:"",link:""}));
+}
+
+function render(){
+  let html="",grp=null;
+  items.forEach((it,i)=>{
+    if(it.g!==grp){grp=it.g;html+=`<div class="group">${esc(grp)}</div>`}
+    html+=`<div class="item${filled(it)?" done":""}" id="it${i}">
+      <div class="ih"><div class="ic"><svg class="i"><use href="#${it.k}"/></svg></div>
+        <div class="t">${it.custom?`<input data-i="${i}" data-f="n" value="${esc(it.n)}" placeholder="Qurilma nomi" style="padding:8px 10px;font-weight:700">`:`<b>${esc(it.n)}</b><small>${esc(it.h)}</small>`}</div>
+        ${it.custom?`<button class="del" data-del="${i}" aria-label="O'chirish"><svg class="i"><use href="#x"/></svg></button>`:""}
+        <div class="st"><svg class="i"><use href="#ok"/></svg></div></div>
+      <div class="fields">
+        <div class="row2">
+          <input data-i="${i}" data-f="model" value="${esc(it.model)}" placeholder="Modeli" autocomplete="off">
+          <div class="pr"><input data-i="${i}" data-f="price" value="${it.price?fmt(digits(it.price)):""}" placeholder="Narxi" inputmode="numeric" autocomplete="off"><span>so'm</span></div>
+        </div>
+        <div class="lk"><input data-i="${i}" data-f="link" value="${esc(it.link)}" placeholder="Havola: https://..." type="url" inputmode="url" autocomplete="off" autocapitalize="off">
+          <a class="${isUrl(it.link)?"on":""}" href="${isUrl(it.link)?esc(it.link.trim()):"#"}" target="_blank" rel="noopener" aria-label="Havolani ochish"><svg class="i"><use href="#ext"/></svg></a></div>
+      </div></div>`;
+  });
+  $("list").innerHTML=html;
+  update();
+}
+
+function update(){
+  const total=items.reduce((s,it)=>s+(+digits(it.price)||0),0);
+  const done=items.filter(filled).length;
+  $("total").textContent=fmt(total)+" so'm";
+  $("pcount").textContent=done+" / "+items.length;
+  $("pbar").style.width=(items.length?done/items.length*100:0)+"%";
+  items.forEach((it,i)=>{const el=$("it"+i);if(el){el.classList.toggle("done",!!filled(it));
+    const a=el.querySelector(".lk a"),ok=isUrl(it.link);a.classList.toggle("on",ok);a.href=ok?it.link.trim():"#";}});
+}
+
+$("list").addEventListener("input",e=>{
+  const t=e.target,i=t.dataset.i,f=t.dataset.f;if(i===undefined)return;
+  if(f==="price"){
+    const d=digits(t.value).replace(/^0+(?=\d)/,"").slice(0,13);
+    items[i].price=d; const pos=t.value.length-t.selectionStart;
+    t.value=d?fmt(d):""; const np=Math.max(0,t.value.length-pos); try{t.setSelectionRange(np,np)}catch(_){}
+  } else items[i][f]=t.value;
+  update(); save();
+});
+$("list").addEventListener("click",e=>{
+  const b=e.target.closest("[data-del]");if(!b)return;
+  items.splice(+b.dataset.del,1);render();save();
+});
+$("addBtn").onclick=()=>{
+  items.push({g:"Qo'shimcha",k:"plus",n:"",h:"",custom:true,model:"",price:"",link:""});
+  render();save();
+  const last=$("it"+(items.length-1));last.scrollIntoView({behavior:"smooth",block:"center"});last.querySelector("input").focus();
+};
+["name","grp"].forEach(id=>$(id).addEventListener("input",e=>{who[id]=e.target.value;save()}));
+
+/* ---------- Modal ---------- */
+function openSheet(h){$("sheet").innerHTML=h;$("modal").classList.add("open");document.body.style.overflow="hidden"}
+function closeSheet(){$("modal").classList.remove("open");document.body.style.overflow=""}
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeSheet()});
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");setTimeout(()=>el.classList.remove("on"),1800)}
+
+function csvCell(v){v=String(v==null?"":v).replace(/\r?\n/g," ").trim();return /[",;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function reportText(){
+  const total=items.reduce((s,it)=>s+(+digits(it.price)||0),0);
+  const nm=who.name.trim(), gr=who.grp.trim();
+  const rows=[["O'quvchi","Guruh","Qurilma nomi","Modeli","Narxi","Havola"]];
+  items.forEach(it=>rows.push([nm,gr,it.n||"Qurilma",it.model.trim(),digits(it.price),it.link.trim()]));
+  rows.push([nm,gr,"Umumiy narxi","",String(total),""]);
+  return rows.map(r=>r.map(csvCell).join(",")).join("\n");
+}
+
+function fileName(){
+  const base=[who.name.trim(),who.grp.trim()].filter(Boolean).join("_")||"topshiriq";
+  return "Kompyuter_"+base.replace(/[\\/:*?"<>|]+/g,"").replace(/\s+/g,"_")+".csv";
+}
+function csvFile(){return new File(["﻿"+reportText()+"\n"],fileName(),{type:"text/csv"})}
+function canShareFile(){try{return !!(navigator.canShare&&navigator.canShare({files:[csvFile()]}))}catch(e){return false}}
+async function shareCsv(){
+  const f=csvFile();
+  if(canShareFile()){
+    try{await navigator.share({files:[f],title:fileName()});toast("Yuborildi ✓");return}
+    catch(e){if(e&&e.name==="AbortError"){toast("Bekor qilindi");return}}
+  }
+  downloadCsv();
+}
+function downloadCsv(){
+  const url=URL.createObjectURL(csvFile());const a=document.createElement("a");
+  a.href=url;a.download=fileName();document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+  toast("Fayl yuklab olindi ✓");const h=document.getElementById("dlHelp");if(h)h.style.display="block";
+}
+$("sendBtn").onclick=()=>{
+  const miss=[];
+  if(!who.name.trim()) miss.push("Ism-familiya");
+  items.forEach(it=>{
+    const p=[];if(!it.model.trim())p.push("modeli");if(!(+digits(it.price)>0))p.push("narxi");if(!isUrl(it.link))p.push("havolasi");
+    if(p.length) miss.push(`${it.n||"Qo'shimcha qurilma"} — ${p.join(", ")}`);
+  });
+  const total=items.reduce((s,it)=>s+(+digits(it.price)||0),0);
+  const text=reportText();
+  const tg="https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(text);
+  openSheet(`
+    <h2>Natijani yuborish</h2>
+    <p class="m">Tekshirib oling, so'ng Telegram orqali o'qituvchiga yuboring.</p>
+    ${miss.length?`<div class="miss"><b>To'ldirilmagan (${miss.length}):</b><br>${miss.map(esc).join("<br>")}</div>`:""}
+    <div class="res">
+      <div class="hd"><b>${esc(who.name.trim()||"Ism kiritilmagan")}</b>${who.grp.trim()?" · "+esc(who.grp.trim()):""}</div>
+      ${items.map(it=>`<div class="r"><b style="font-size:14px">${esc(it.n||"Qurilma")}</b><span>${esc(it.model.trim()||"—")}</span><em>${it.price?fmt(digits(it.price)):"—"}</em></div>`).join("")}
+      <div class="ft"><span>Umumiy narx</span><span>${fmt(total)} so'm</span></div>
+    </div>
+    <div class="acts">
+      <button class="btn tg" id="shareBtn"><svg class="i"><use href="#send"/></svg>CSV faylni Telegramga yuborish</button>
+      <div class="note" style="margin:-2px 0 4px">Ochilgan menyudan <b>Telegram</b>ni, keyin o'qituvchini tanlang</div>
+      <div id="dlHelp" class="miss" style="display:none;background:var(--card);border-color:var(--ok)"><b style="color:var(--ok)">Fayl yuklab olindi.</b> Telegramda o'qituvchi chatini oching → 📎 → <b>Fayl</b> → «Yuklanmalar» (Downloads) dan <b>${esc(fileName())}</b> ni tanlang.</div>
+      <button class="btn g" id="dlBtn"><svg class="i"><use href="#copy"/></svg>CSV faylni yuklab olish</button>
+      <a class="btn g" href="${tg}" target="_blank" rel="noopener"><svg class="i"><use href="#send"/></svg>Matn qilib yuborish</a>
+      <button class="btn g" id="copyBtn"><svg class="i"><use href="#copy"/></svg>CSV matnini nusxalash</button>
+      <button class="btn g" id="closeBtn">Ortga qaytish</button>
+    </div>
+    <div class="miss" style="background:var(--card);border-color:var(--line);margin:12px 0 0"><b style="color:var(--acc)">Yuboriladigan CSV:</b><pre style="white-space:pre-wrap;word-break:break-all;font-size:11.5px;color:var(--mute);margin-top:6px;max-height:160px;overflow:auto">${esc(text)}</pre></div>
+    <p class="note">Ulashish menyusi chiqmasa, fayl telefonga yuklab olinadi — uni Telegramda 📎 orqali yuboring. Yoki: «CSV matnini nusxalash»ni bosing va o'qituvchiga xabar qilib yuboring.</p>`);
+  $("copyBtn").onclick=()=>{
+    const done=()=>toast("Nusxa olindi ✓");
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done,()=>fallbackCopy(text,done));
+    else fallbackCopy(text,done);
+  };
+  $("closeBtn").onclick=closeSheet;
+  $("dlBtn").onclick=downloadCsv;
+  $("shareBtn").onclick=shareCsv;
+};
+function fallbackCopy(t,cb){
+  const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();
+  try{document.execCommand("copy");cb()}catch(e){toast("Nusxa olib bo'lmadi")}ta.remove();
+}
+
+$("clearBtn").onclick=()=>{
+  openSheet(`<h2>Hammasini tozalaysizmi?</h2><p class="m">Kiritilgan barcha model, narx va havolalar o'chiriladi.</p>
+    <div class="acts"><button class="btn p" id="yes" style="background:var(--bad);color:#fff">Ha, tozalash</button><button class="btn g" id="no">Bekor qilish</button></div>`);
+  $("yes").onclick=()=>{items=DEFAULT.map(d=>({...d,model:"",price:"",link:""}));save();render();closeSheet();toast("Tozalandi")};
+  $("no").onclick=closeSheet;
+};
+
+$("bkBtn").onclick=()=>{
+  const code=enc({items,who});
+  const tg="https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(code);
+  openSheet(`<h2>Zaxira kodi</h2><p class="m">Bu kodni o'zingizga (Telegram → «Saqlangan xabarlar») yuborib qo'ying. Keyin «Tiklash» orqali hamma narsani qaytarasiz.</p>
+    <textarea readonly id="bkCode">${code}</textarea>
+    <div class="acts"><a class="btn tg" href="${tg}" target="_blank" rel="noopener"><svg class="i"><use href="#send"/></svg>Telegramga yuborish</a>
+    <button class="btn g" id="bkCopy"><svg class="i"><use href="#copy"/></svg>Kodni nusxalash</button><button class="btn g" id="bkClose">Yopish</button></div>`);
+  $("bkCopy").onclick=()=>{const done=()=>toast("Nusxa olindi ✓");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(code).then(done,()=>fallbackCopy(code,done));else fallbackCopy(code,done)};
+  $("bkClose").onclick=closeSheet;
+};
+$("rsBtn").onclick=()=>{
+  openSheet(`<h2>Zaxiradan tiklash</h2><p class="m">Saqlab qo'ygan kodingizni (PC1: bilan boshlanadi) shu yerga joylang.</p>
+    <textarea id="rsCode" placeholder="PC1:..."></textarea><div class="miss" id="rsErr" style="display:none"><b>Kod noto'g'ri.</b> To'liq nusxalanganini tekshiring.</div>
+    <div class="acts"><button class="btn p" id="rsOk">Tiklash</button><button class="btn g" id="rsClose">Bekor qilish</button></div>`);
+  $("rsOk").onclick=()=>{
+    try{const d=dec($("rsCode").value);if(!Array.isArray(d.items))throw 0;items=d.items;who=d.who||{name:"",grp:""};
+      $("name").value=who.name||"";$("grp").value=who.grp||"";render();save();closeSheet();toast("Tiklandi ✓")}
+    catch(e){$("rsErr").style.display="block"}
+  };
+  $("rsClose").onclick=closeSheet;
+};
+if(!canStore){$("warn").classList.add("on");const el=$("saved");el.className="saved no";el.querySelector("span").textContent="Saqlanmayapti!"}
+
+load();
+$("name").value=who.name||"";$("grp").value=who.grp||"";
+render();
+</script>
+</body>
+</html>
